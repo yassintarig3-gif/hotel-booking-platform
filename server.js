@@ -397,9 +397,25 @@ app.post("/bookings", function(req, res) {
        GET HOTEL NAME
     ========================= */
 
+    if (
+
+        new Date(check_out) <= new Date(check_in)
+
+    ) {
+
+        return res.status(400).json({
+
+            message:
+                "Check-out must be after check-in."
+
+        });
+
+    }
+
+
     db.query(
 
-        "SELECT name FROM hotels WHERE id = ?",
+        "SELECT name, price FROM hotels WHERE id = ?",
 
         [hotel_id],
 
@@ -437,6 +453,21 @@ app.post("/bookings", function(req, res) {
 
             const hotel_name =
                 results[0].name;
+
+
+            const calculatedNights =
+                Math.ceil(
+                    (
+                        new Date(check_out) -
+                        new Date(check_in)
+                    ) /
+                    (1000 * 60 * 60 * 24)
+                );
+
+
+            const calculatedTotal =
+                calculatedNights *
+                Number(results[0].price);
 
 
             /* =========================
@@ -484,9 +515,9 @@ app.post("/bookings", function(req, res) {
 
                     check_out,
 
-                    nights,
+                    calculatedNights,
 
-                    total_price
+                    calculatedTotal
 
                 ],
 
@@ -613,13 +644,29 @@ app.delete(
             req.params.id;
 
 
+        const userId =
+            req.body.user_id;
+
+
+        if (!userId) {
+
+            return res.status(400).json({
+
+                message:
+                    "User is required."
+
+            });
+
+        }
+
+
         db.query(
 
-            "DELETE FROM bookings WHERE id = ?",
+            "DELETE FROM bookings WHERE id = ? AND user_id = ?",
 
-            [bookingId],
+            [bookingId, userId],
 
-            function(error) {
+            function(error, result) {
 
                 if (error) {
 
@@ -629,6 +676,18 @@ app.delete(
 
                         message:
                             "Could not cancel booking."
+
+                    });
+
+                }
+
+
+                if (result.affectedRows === 0) {
+
+                    return res.status(404).json({
+
+                        message:
+                            "Booking not found."
 
                     });
 

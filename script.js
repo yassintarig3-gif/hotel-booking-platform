@@ -1034,7 +1034,19 @@ async function cancelBooking(
 
                 {
 
-                    method: "DELETE"
+                    method: "DELETE",
+
+                    headers: {
+
+                        "Content-Type": "application/json"
+
+                    },
+
+                    body: JSON.stringify({
+
+                        user_id: currentUser.id
+
+                    })
 
                 }
 

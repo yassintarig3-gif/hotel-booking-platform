@@ -2,14 +2,19 @@
   "name": "tarig-hotel-booking",
   "version": "1.0.0",
   "description": "TARIG Hotel Booking Platform",
-  "main": "server.js",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "bcryptjs": "^3.0.2",
-    "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "mysql2": "^3.14.5"
+    "@vitejs/plugin-react": "^6.3.0",
+    "lucide-react": "latest",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "latest",
+    "vite": "^8.3.8"
   }
 }
